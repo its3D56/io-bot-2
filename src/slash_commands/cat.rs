@@ -31,7 +31,7 @@ pub async fn run(cmd: &se::CommandInteraction, ctx: &se::Context) {
     let mut random_source = random::default(time as u64);
     
     let random_cat_pic = cat_pictures[random_source.read::<usize>() % cat_pictures.len()].path();
-    let attachment = match se::CreateAttachment::path(random_cat_pic).await {
+    let attachment = match se::CreateAttachment::path(&random_cat_pic).await {
         Ok(a) => a,
         Err(why) => {
             println!("WARN: Failed to create attachment: {why}");
@@ -43,5 +43,8 @@ pub async fn run(cmd: &se::CommandInteraction, ctx: &se::Context) {
     
     if let Err(why) = reply(cmd, ctx, message).await {
         println!("WARN: Failed to reply with xkcd comic: {why}");
+        return;
     }
+
+    println!("INFO: Sent cat picture \"{}\"", random_cat_pic.to_str().unwrap())
 }
