@@ -31,19 +31,19 @@ async fn get_latency(ctx: &se::Context) -> Option<u128> {
     let data = ctx.data.read().await;
     
     let Some(shard_manager) = data.get::<ShardManagerContainer>() else {
-        println!("ERROR: Failed to get shard manager");
+        println!("WARN: Failed to get shard manager");
         return None;
     };
 
     let runners = shard_manager.runners.lock().await;
 
     let Some(runner) = runners.get(&ctx.shard_id) else {
-        println!("ERROR: No shard found");
+        println!("WARN: No shard found");
         return None;
     };
 
     let Some(latency) = runner.latency else {
-        println!("ERROR: Failed to get latency");
+        println!("WARN: Failed to get latency");
         return None;
     };
 

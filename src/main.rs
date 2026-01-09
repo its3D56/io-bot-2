@@ -78,16 +78,17 @@ async fn register_commands(ctx: &Context) -> CommandCount {
         ping::reg(),
         xkcd::reg(),
         wiki::reg(),
+        cat::reg(),
     ];
 
     let count = commands.len();
 
     for command in commands {
         if let Err(why) = se::Command::create_global_command(ctx, command).await {
-            println!("ERROR: Could not create global command: {why}")
+            println!("WARN: Could not create global command: {why}")
         }
     }
-    
+
     count
 }
 
@@ -103,7 +104,8 @@ async fn slash_command_used(ctx: &Context, cmd: &se::CommandInteraction) {
         "ping" => ping::run(cmd, ctx).await,
         "xkcd" => xkcd::run(cmd, ctx).await,
         "wiki" => wiki::run(cmd, ctx).await,
-        n => println!("ERROR: No handler function for command: \"{n}\""),
+        "cat"  => cat::run(cmd, ctx).await,
+        n => println!("WARN: No handler function for command: \"{n}\""),
     }
 }
 
