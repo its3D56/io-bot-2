@@ -37,16 +37,24 @@ pub async fn run(cmd: &se::CommandInteraction, ctx: &se::Context) {
         .build()
         .unwrap()
     ;
+
+    let page = find_page(query, &reqwest_client).await;
 	
-	let message_content = match find_page(query, &reqwest_client).await {
-	    Ok(page) => page.get_formatted(),
+	let message_content = match page {
+	    Ok(ref page) => page.get_formatted(),
 	    _ => format!("Could not find article \"{query}\""),
 	};
 
 	let message = new_message().content(truncate_text(message_content));
 
 	if let Err(why) = reply(cmd, ctx, message).await {
-	    println!("WARN: Failed to reply with wikipedia article: {why}")
+	    println!("WARN: Failed to reply with wikipedia article: {why}");
+	    return;
+	}
+
+	match page {
+	    Ok(page) => println!("INFO: Replied with article: {}", page.title),
+	    Err(why) => println!("INFO: Failed to get article \"{query}\": {why}")
 	}
 }
 
@@ -118,7 +126,7 @@ struct Page {
 
 impl Page {
     fn from_json(json: json::JsonValue) -> WikiResult<Self> {
-        let Some((_, page)) = json["query"]["pages"].entries().last() else {
+        let Some((_, page)) = json["query"]["pages"].entries().next_back() else {
             return Err(Box::new(WikiError::InvalidResponse));
         };
 
@@ -144,8 +152,8 @@ impl Page {
         })
     }
 
-    fn get_formatted(self) -> String {
-        let title = self.title;
+    fn get_formatted(&self) -> String {
+        let title = &self.title;
         if self.is_disambiguation {
             format!("# '{}' May Refer to:\n{}", &title, self.links.join("\n"))
         } else {
