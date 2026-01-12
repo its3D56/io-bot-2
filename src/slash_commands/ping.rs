@@ -13,15 +13,24 @@ pub fn reg() -> se::CreateCommand {
 }
 
 pub async fn run(cmd: &se::CommandInteraction, ctx: &se::Context) {
-    let message_content = match get_latency(ctx).await {
+    let latency = get_latency(ctx).await;
+    let message_content = match latency {
         Some(v) => format!("Pong! Latency: {v}ms"),
-        None => "Pong! Failed to get latency".into(),
+        None => {
+            println!("WARN: Failed to get latency");
+            "Pong! Failed to get latency".into()
+        },
     };
 
     let message = new_message().content(message_content);
     
     if let Err(why) = reply(cmd, ctx, message).await {
-        println!("WARN: Failed to create interaction response: {why}")
+        println!("WARN: Failed to create interaction response: {why}");
+        return;
+    }
+
+    if let Some(latency) = latency {
+        println!("INFO: Replied with latency {latency}ms")
     }
 }
 
