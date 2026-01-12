@@ -56,7 +56,10 @@ pub async fn run(cmd: &se::CommandInteraction, ctx: &se::Context) {
 
     if let Err(why) = reply(cmd, ctx, message).await {
         println!("WARN: Failed to reply with xkcd comic: {why}");
+        return;
     }
+
+    println!("INFO: Sent comic #{}: {}", comic.number, comic.title)
 }
 
 
