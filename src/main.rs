@@ -128,12 +128,12 @@ fn pretty_print_command(cmd: &se::CommandInteraction) -> String {
 }
 
 fn format_option(opt: &se::ResolvedOption) -> String {
-    use serenity::all::ResolvedValue as ResVal;
+    use serenity::all::ResolvedValue;
     
     let name = &opt.name;
     match opt.value {
-        ResVal::SubCommand(_) => name.to_string(),
-        ResVal::String(s) => format!("\"{s}\""),
-        _ => unimplemented!(), // Unimplemented becasue we arent using any other option types
+        ResolvedValue::SubCommand(_) => name.to_string(),
+        ResolvedValue::String(s) => format!("\"{s}\""),
+        _ => unimplemented!("Other option types aren't being used"),
     }
 }
