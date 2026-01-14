@@ -55,7 +55,7 @@ impl serenity::client::EventHandler for EventHandler {
         if command_count == 1 {
             println!("INFO: Registered 1 command!")
         } else {
-            println!("INFO: Registered {command_count} command(s)!");
+            println!("INFO: Registered {command_count} commands!");
         }
       
         println!("INFO: Bot started!")
