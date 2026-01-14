@@ -98,21 +98,25 @@ async fn slash_command_used(ctx: &Context, cmd: &se::CommandInteraction) {
     let name = &cmd.data.name;
     let command_pretty = pretty_print_command(cmd);
 
-    println!("INFO: Slash command used: \"{command_pretty}\"");
+    println!("INFO: Slash command used: {command_pretty}");
 
     match name.as_str() {
         "ping" => ping::run(cmd, ctx).await,
         "xkcd" => xkcd::run(cmd, ctx).await,
         "wiki" => wiki::run(cmd, ctx).await,
         "cat"  => cat::run(cmd, ctx).await,
-        n => println!("WARN: No handler function for command: \"{n}\""),
+        n => println!("WARN: No handler function for command: {n}"),
     }
 }
 
 fn pretty_print_command(cmd: &se::CommandInteraction) -> String {
     let options = cmd.data.options();
-    
     let name = &cmd.data.name;
+
+    if options.is_empty() {
+        return name.to_string()
+    }
+    
     let formatted_options = options
         .iter()
         .map(format_option)
@@ -120,11 +124,7 @@ fn pretty_print_command(cmd: &se::CommandInteraction) -> String {
         .join(" ")
     ;
 
-    if options.is_empty() {
-        name.to_string()
-    } else {
-        format!("{name} {formatted_options}")
-    }
+    format!("{name} {formatted_options}")
 }
 
 fn format_option(opt: &se::ResolvedOption) -> String {
@@ -133,7 +133,7 @@ fn format_option(opt: &se::ResolvedOption) -> String {
     let name = &opt.name;
     match opt.value {
         ResVal::SubCommand(_) => name.to_string(),
-        ResVal::String(s) => format!("\'{s}\'"),
+        ResVal::String(s) => format!("\"{s}\""),
         _ => unimplemented!(), // Unimplemented becasue we arent using any other option types
     }
 }
