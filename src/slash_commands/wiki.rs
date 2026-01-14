@@ -53,7 +53,7 @@ pub async fn run(cmd: &se::CommandInteraction, ctx: &se::Context) {
 	}
 
 	match page {
-	    Ok(page) => println!("INFO: Replied with article: {}", page.title),
+	    Ok(page) => println!("INFO: Replied with article: \"{}\"", page.title),
 	    Err(why) => println!("INFO: Failed to get article \"{query}\": {why}")
 	}
 }

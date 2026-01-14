@@ -46,5 +46,5 @@ pub async fn run(cmd: &se::CommandInteraction, ctx: &se::Context) {
         return;
     }
 
-    println!("INFO: Sent cat picture \"{}\"", random_cat_pic.to_str().unwrap())
+    println!("INFO: Sent cat picture: {}", random_cat_pic.to_str().unwrap())
 }

@@ -59,7 +59,7 @@ pub async fn run(cmd: &se::CommandInteraction, ctx: &se::Context) {
         return;
     }
 
-    println!("INFO: Sent comic #{}: {}", comic.number, comic.title)
+    println!("INFO: Sent comic #{}: \"{}\"", comic.number, comic.title)
 }
 
 
